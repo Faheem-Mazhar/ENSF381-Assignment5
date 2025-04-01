@@ -1,0 +1,8 @@
+footer{
+    position: sticky;
+    bottom: 0;
+    background-color: #004080;
+    color: white;
+    padding: 10px;
+    text-align: center;
+  }
