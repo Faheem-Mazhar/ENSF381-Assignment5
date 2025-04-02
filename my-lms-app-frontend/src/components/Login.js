@@ -121,7 +121,7 @@ const handleLogin = async (e) => {
                 Forgot Password? <Link to='/forgotpassword'>Reset Password</Link>
             </p>
             <p>
-              Don't have an account? <Link to='/register'>Register</Link>
+              Don't have an account? <Link to='/signup'>Register</Link>
             </p>
           </div>
         </div>
