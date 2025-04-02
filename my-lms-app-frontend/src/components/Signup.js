@@ -147,8 +147,6 @@ function Signup() {
       <div className="signup-container">
         <div className="signup">
             <h2>Create a New Account</h2>
-            <div id="messageBox" className="message-box"></div>
-            
             <form className="signupForm">
             <label htmlFor="username">Username:</label>
             <input 
@@ -184,6 +182,7 @@ function Signup() {
             </form>
             
             <button type="button" onClick={() => validateSignupForm()}>Sign up</button>
+            <div id="messageBox" className="message-box"></div>
             
             <Link to="/login">Already have an account? Login</Link>
         </div>

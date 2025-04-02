@@ -58,12 +58,6 @@
     transform: translateY(2px);
 }
 
-@media (min-width: 1450px) {
-    .login-form {
-        width: 40%;
-    }
-}
-
 .status-message {
     padding: 10px;
     margin: 10px 0;
@@ -92,4 +86,10 @@
     font-size: 0.875rem;
     margin-top: 5px;
     display: block;
+}
+
+@media (min-width: 1450px) {
+    .login-form {
+        width: 40%;
+    }
 }
