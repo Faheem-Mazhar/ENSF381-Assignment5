@@ -53,12 +53,15 @@ const handleLogin = async (e) => {
     }
     
     try {
-        const response = await fetch('https://jsonplaceholder.typicode.com/users');
-        const users = await response.json();
+        const response = await fetch('http://127.0.0.1:5000/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username, password })
+        });
+        const user = await response.json();
         
-        const user = users.find(user => 
-            user.username === username || user.email === username
-        );
         
         if (user) {
             setStatus({ type: 'success', message: 'Login successful! Redirecting to course page' });

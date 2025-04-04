@@ -1,17 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import '../styles/Signup.css';
-import { useState } from 'react';
 import Header from './Header';
 import Footer from './Footer';
 
 function Signup() {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
-    const [email, setEmail] = useState('');
 
-    const validateSignupForm = () => {
+    const validateSignupForm = async () => {
         const username = document.getElementById('username').value;
         const password = document.getElementById('password').value;
         const confirmPassword = document.getElementById('confirmPassword').value;
@@ -39,14 +34,42 @@ function Signup() {
         if (!validateEmail(email)) {
             return;
         }
-        
-        // If all validations pass, show success message and redirect
-        showMessage("Signup successful! Redirecting to login page...", "success");
-        
-        // Redirect to login page after 2 seconds
-        setTimeout(() => {
-            window.location.href = "login.html";
-        }, 2000);
+
+        // If all validations pass, attempt to register user
+        try {
+            const response = await fetch('http://127.0.0.1:5000/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username,
+                    password,
+                    email,
+                    enrolled_courses: []
+                })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                // Handle server-side validation errors or other issues
+                showMessage(data.message || "Registration failed. Please try again.", "error");
+                return;
+            }
+
+            // Show success message
+            showMessage("Signup successful! Redirecting to login page...", "success");
+            
+            // Redirect to login page after 2 seconds
+            setTimeout(() => {
+                window.location.href = "/login";
+            }, 2000);
+
+        } catch (error) {
+            showMessage("An error occurred during registration. Please try again.", "error");
+            console.error('Registration error:', error);
+        }
     }
     
     // Function to validate username
