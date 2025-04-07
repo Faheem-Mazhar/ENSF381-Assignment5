@@ -1,12 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import Header from './Header';
 import Footer from './Footer';
-import courses from '../data/courses';
 import '../styles/CoursesPage.css';
 
 // CourseItem Component
 const CourseItem = ({ course, onEnroll }) => {
     const [showDescription, setShowDescription] = useState(false);
+    
+    // Import images dynamically
+    const getImagePath = (imageName) => {
+        try {
+            // Try to get the image from the images folder
+            return require(`../images/${imageName}.jpg`);
+        } catch (error) {
+            // Fallback to a default image if the specific one is not found
+            return require('../images/course1.jpg');
+        }
+    };
 
     return (
         <div 
@@ -14,7 +24,11 @@ const CourseItem = ({ course, onEnroll }) => {
             onMouseEnter={() => setShowDescription(true)}
             onMouseLeave={() => setShowDescription(false)}
         >
-            <img src={course.image} alt={course.name} className="course-image" />
+            <img 
+                src={getImagePath(course.image)} 
+                alt={course.name} 
+                className="course-image" 
+            />
             <h3>{course.name}</h3>
             <p>Instructor: {course.instructor}</p>
             {showDescription && (
@@ -112,11 +126,37 @@ const EnrollmentList = ({ onEnrollmentChange }) => {
 
 // CourseCatalog Component
 const CourseCatalog = ({ enrolledCourses, onEnroll }) => {
+    const [courses, setCourses] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        // Fetch courses from backend API
+        fetch('http://127.0.0.1:5000/courses')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch courses');
+                }
+                return response.json();
+            })
+            .then(data => {
+                setCourses(data);
+                setLoading(false);
+            })
+            .catch(err => {
+                setError(err.message);
+                setLoading(false);
+            });
+    }, []);
+
     const handleEnroll = (course) => {
         if (!enrolledCourses.some(c => c.id === course.id)) {
             onEnroll(course);
         }
     };
+
+    if (loading) return <div>Loading courses...</div>;
+    if (error) return <div>Error: {error}</div>;
 
     return (
         <div className="course-catalog">
