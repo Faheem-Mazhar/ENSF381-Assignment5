@@ -60,19 +60,25 @@ const handleLogin = async (e) => {
             },
             body: JSON.stringify({ username, password })
         });
-        const user = await response.json();
         
+        const data = await response.json();
         
-        if (user) {
+        if (response.ok) {
             setStatus({ type: 'success', message: 'Login successful! Redirecting to course page' });
-            setUser(user);
+            
+            // Store user info in AuthContext
+            setUser({ username });
             setIsAuthenticated(true);
+            
+            // Store in localStorage for persistence
+            localStorage.setItem('user', JSON.stringify({ username }));
+            localStorage.setItem('isAuthenticated', 'true');
             
             setTimeout(() => {
                 navigate('/coursepage');
             }, 2000);
         } else {
-            setStatus({ type: 'error', message: 'Invalid username or password.' });
+            setStatus({ type: 'error', message: data.message || 'Invalid username or password.' });
         }
     } catch (error) {
         setStatus({ 

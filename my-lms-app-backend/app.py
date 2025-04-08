@@ -15,27 +15,37 @@ from students import add_course_to_student
 from students import remove_course_from_student
 
 app = Flask(__name__)
-CORS(app)
+# Configure CORS to allow requests from any origin
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 @app.route('/register', methods=['POST'])
 def register():
     data = request.json
-    add_student(data)
     
+    # Check if user already exists
     if data['username'] in get_students():
         return jsonify({"message": "User already exists"}), 400
-    else:
-        return jsonify({"message": "User registered successfully"}), 200
+    
+    # Add the new user
+    add_student(data)
+    return jsonify({"message": "User registered successfully"}), 200
 
 @app.route('/login', methods=['POST'])
 def login():
     data = request.json
-    valid_student = get_student(data['username'], data['password'])
     
-    if valid_student:
+    try:
+        valid_student = get_student(data['username'], data['password'])
         return jsonify({"message": "User logged in successfully"}), 200
-    else:
+    except KeyError as e:
+        # Student not found
         return jsonify({"message": "Invalid username or password"}), 400
+    except ValueError as e:
+        # Invalid password
+        return jsonify({"message": "Invalid username or password"}), 400
+    except Exception as e:
+        # Any other error
+        return jsonify({"message": str(e)}), 500
 
 @app.route('/enroll/<string:student_id>', methods=['POST'])
 def enroll(student_id):
