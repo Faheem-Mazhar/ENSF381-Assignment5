@@ -59,3 +59,24 @@ header {
   .navbar a:hover {
     text-decoration: underline;
   }
+
+  .logout-button {
+    background-color: #004080;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+  }
+
+  .logout-button:hover {
+    background-color: #003366;
+  }
+
+  .user-info {
+    color: #004080;
+    font-weight: bold;
+    margin-right: 10px;
+  }

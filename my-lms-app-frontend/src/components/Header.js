@@ -1,9 +1,18 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useContext } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import logo from '../images/logo.jpg';
 import '../styles/Header.css';
+import { AuthContext } from '../context/AuthContext';
 
 function Header() {
+  const { isAuthenticated, user, logout } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/home');
+  };
+
   return (
     <header className="header">
         <div className="header-logo">
@@ -16,7 +25,13 @@ function Header() {
             <nav className="navbar">
                 <div><Link to="/home">Home</Link></div>
                 <div><Link to="/coursepage">Courses</Link></div>
-                <div><Link to="/login">Login</Link></div>
+                {isAuthenticated ? (
+                    <>
+                        <div><button onClick={handleLogout} className="logout-button">Logout</button></div>
+                    </>
+                ) : (
+                    <div><Link to="/login">Login</Link></div>
+                )}
             </nav>
         </div>
     </header>
